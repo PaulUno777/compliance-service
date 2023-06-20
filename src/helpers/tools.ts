@@ -205,14 +205,14 @@ export class Tools {
     return clean;
   }
 
-  async migrateSanctioned(list: any[]) {
+  async migrate(list: any[]) {
     //==== migrate all to MongoDB
     //push data in data in batches of 1000 to avoid errors and timeouts
     let data: any[];
     let result;
     let count = 0;
     //ITA
-    if (list.length <= 2000) {
+    if (list.length <= 10) {
       result = await this.prisma.sanctioned.createMany({ data: list });
       count += result.count;
     } else {

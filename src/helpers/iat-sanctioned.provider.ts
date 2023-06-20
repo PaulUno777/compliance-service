@@ -15,20 +15,20 @@ export class IatSanctionedProvider {
   ) {}
 
   // International Trade Administration sanction source
-  async getSanctionedIta() {
+  async getSanctioned() {
     this.logger.log('====== Getting Sanstion From ITA Source...');
     const url = this.config.get('ITA_SOURCE');
     //request
     await this.tools.saveJsonFromJson(url, 'liste_ITA');
   }
 
-  async mapSanctionedIta() {
+  async mapSanctioned() {
     this.logger.log('====== Mapping Cleaning & Saving data From ITA Source...');
     const SOURCE_DIR = this.config.get('SOURCE_DIR');
     const dataIat = await this.tools.downloadData('liste_ITA.json');
 
     //==== ---- Lists ---- ====
-    const sourceList = dataIat.sources_used;
+    const sourceList: any[] = dataIat.sources_used;
 
     const links = [
       {
@@ -127,7 +127,7 @@ export class IatSanctionedProvider {
       //==== list id
       lists.forEach((elt) => {
         if (item.source === elt.name) {
-          entity['listId'] = elt.id;
+          entity['listId'] = elt['id'];
         }
       });
       //==== gender
@@ -359,12 +359,12 @@ export class IatSanctionedProvider {
     writeStream.end();
   }
 
-  async migrateSanctionedIta() {
+  async migrateSanctioned() {
     this.logger.log('migrationg ITA sanctioned Collection...');
     //Get the data from source file
     const { results } = await this.tools.downloadData('clean_ITA.json');
     //migrate all to MongoDB
-    return await this.tools.migrateSanctioned(results);
+    return await this.tools.migrate(results);
   }
   
 }

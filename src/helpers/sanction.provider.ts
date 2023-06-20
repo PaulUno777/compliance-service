@@ -17,9 +17,14 @@ export class SanctionProvider {
     const SOURCE_DIR = this.config.get('SOURCE_DIR');
     //---- list file
     let lists = [];
+
     //---- ITA
     const listIta = await this.tools.downloadData('clean_ITA.json');
     lists = lists.concat(listIta.lists);
+
+    //---- DGT
+    const listDgt = await this.tools.downloadData('clean_DGT.json');
+    lists = lists.concat(listDgt.lists);
 
     const sourceLinkFile = `${SOURCE_DIR}clean_list.json`;
     const writeStream = createWriteStream(sourceLinkFile);

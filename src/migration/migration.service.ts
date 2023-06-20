@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { DgtSanctionedProvider } from 'src/helpers/dgt-sanctioned.provider';
 import { IatSanctionedProvider } from 'src/helpers/iat-sanctioned.provider';
 import { SanctionProvider } from 'src/helpers/sanction.provider';
 import { Tools } from 'src/helpers/tools';
@@ -10,11 +11,12 @@ export class MigrationService {
   constructor(
     private sactionProvider: SanctionProvider,
     private iatSanctionedProvider: IatSanctionedProvider,
+    private dgtSanctionedProvider: DgtSanctionedProvider,
     private tools: Tools,
   ) {}
 
   async updateAllToMongo() {
-    //delete all elements in collection
+    //= = = = = delete all elements in collection
     const client = this.tools.getMongoClient();
     await this.tools
       .mongoDeleteMany('Sanctioned', client)
@@ -22,19 +24,20 @@ export class MigrationService {
 
     const result = await Promise.all([
       await this.sactionProvider.migrateSanctionList(),
-      await this.iatSanctionedProvider.migrateSanctionedIta(),
+      await this.iatSanctionedProvider.migrateSanctioned(),
+      await this.dgtSanctionedProvider.migrateSanctioned(),
     ]);
-    this.logger.log('All is well !');
+    this.logger.log('All is well !'); 
     return result;
   }
 
   async test() {
-
-    //get and clean sanctioned
-    await this.iatSanctionedProvider.getSanctionedIta();
-    await this.iatSanctionedProvider.mapSanctionedIta();
-
-
+    //= = = = = get and clean sanctioned
+    //await this.iatSanctionedProvider.getSanctioned();
+    await this.iatSanctionedProvider.mapSanctioned();
+  
+    //await this.dgtSanctionedProvider.getSanctioned();
+    await this.dgtSanctionedProvider.mapSanctioned();
 
     //map & write sanction list
     await this.sactionProvider.mapSanction();
