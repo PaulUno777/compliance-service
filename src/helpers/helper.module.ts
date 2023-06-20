@@ -4,6 +4,7 @@ import { SanctionProvider } from './sanction.provider';
 import { HttpModule } from '@nestjs/axios';
 import { IatSanctionedProvider } from './iat-sanctioned.provider';
 import { DgtSanctionedProvider } from './dgt-sanctioned.provider';
+import { UnSanctionedProvider } from './un-sanctioned.provider';
 
 @Global()
 @Module({
@@ -13,12 +14,14 @@ import { DgtSanctionedProvider } from './dgt-sanctioned.provider';
     SanctionProvider,
     IatSanctionedProvider,
     DgtSanctionedProvider,
+    UnSanctionedProvider,
   ],
   exports: [
     Tools,
     SanctionProvider,
     IatSanctionedProvider,
     DgtSanctionedProvider,
+    UnSanctionedProvider,
   ],
 })
 export class HelperModule {}

@@ -3,6 +3,7 @@ import { DgtSanctionedProvider } from 'src/helpers/dgt-sanctioned.provider';
 import { IatSanctionedProvider } from 'src/helpers/iat-sanctioned.provider';
 import { SanctionProvider } from 'src/helpers/sanction.provider';
 import { Tools } from 'src/helpers/tools';
+import { UnSanctionedProvider } from 'src/helpers/un-sanctioned.provider';
 
 @Injectable()
 export class MigrationService {
@@ -12,6 +13,7 @@ export class MigrationService {
     private sactionProvider: SanctionProvider,
     private iatSanctionedProvider: IatSanctionedProvider,
     private dgtSanctionedProvider: DgtSanctionedProvider,
+    private unSanctionedProvider: UnSanctionedProvider,
     private tools: Tools,
   ) {}
 
@@ -26,6 +28,7 @@ export class MigrationService {
       await this.sactionProvider.migrateSanctionList(),
       await this.iatSanctionedProvider.migrateSanctioned(),
       await this.dgtSanctionedProvider.migrateSanctioned(),
+      await this.unSanctionedProvider.migrateSanctioned(),
     ]);
     this.logger.log('All is well !'); 
     return result;
@@ -33,11 +36,14 @@ export class MigrationService {
 
   async test() {
     //= = = = = get and clean sanctioned
-    //await this.iatSanctionedProvider.getSanctioned();
+    await this.iatSanctionedProvider.getSanctioned();
     await this.iatSanctionedProvider.mapSanctioned();
   
-    //await this.dgtSanctionedProvider.getSanctioned();
+    await this.dgtSanctionedProvider.getSanctioned();
     await this.dgtSanctionedProvider.mapSanctioned();
+
+    await this.unSanctionedProvider.getSanctioned;
+    await this.unSanctionedProvider.mapSanctioned();
 
     //map & write sanction list
     await this.sactionProvider.mapSanction();

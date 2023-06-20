@@ -18,7 +18,7 @@ model SanctionList {
   sourceUrl       String?
   importRate      String?   @default("Weekly")
 
-  lastImported      DateTime @default(now())
+  lastImported     DateTime @default(now())
   sourceLastUpdated DateTime @default(now())
 
   santioned Sanctioned[]

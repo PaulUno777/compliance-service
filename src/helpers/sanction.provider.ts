@@ -9,7 +9,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class SanctionProvider {
   private readonly logger = new Logger();
-  constructor(private config: ConfigService, private tools: Tools, private prisma: PrismaService) {}
+  constructor(
+    private config: ConfigService,
+    private tools: Tools,
+    private prisma: PrismaService,
+  ) {}
 
   //==== ---- map and save sanction into file ---- ====
   async mapSanction() {
@@ -25,6 +29,10 @@ export class SanctionProvider {
     //---- DGT
     const listDgt = await this.tools.downloadData('clean_DGT.json');
     lists = lists.concat(listDgt.lists);
+
+    //---- UN
+    const listUn = await this.tools.downloadData('clean_UN.json');
+    lists = lists.concat(listUn.lists);
 
     const sourceLinkFile = `${SOURCE_DIR}clean_list.json`;
     const writeStream = createWriteStream(sourceLinkFile);
@@ -43,9 +51,9 @@ export class SanctionProvider {
     });
     //delete all elements in collection
     const client = this.tools.getMongoClient();
-    await this.tools.mongoDeleteMany('SanctionList', client).finally(() =>
-      client.close(),
-    );
+    await this.tools
+      .mongoDeleteMany('SanctionList', client)
+      .finally(() => client.close());
     // Apply updates
     const result = await this.prisma.sanctionList.createMany({
       data: data,

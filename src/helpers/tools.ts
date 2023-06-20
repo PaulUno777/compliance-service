@@ -212,7 +212,7 @@ export class Tools {
     let result;
     let count = 0;
     //ITA
-    if (list.length <= 10) {
+    if (list.length <= 1000) {
       result = await this.prisma.sanctioned.createMany({ data: list });
       count += result.count;
     } else {
@@ -226,6 +226,9 @@ export class Tools {
         count += result.count;
       }
     }
+    this.logger.log({
+      message: `${Number(count)} element(s) migrated`,
+    });
     return {
       message: `${Number(count)} element(s) migrated`,
     };
@@ -259,5 +262,4 @@ export class Tools {
     const jsonData = response.data;
     return jsonData;
   }
-
 }
