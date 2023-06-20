@@ -92,5 +92,6 @@ echo UE_SOURCE=${UE_SOURCE} >> .env;
         sh 'docker container logs kmx-sanction-service'
       }
     }
+
   }
 }
