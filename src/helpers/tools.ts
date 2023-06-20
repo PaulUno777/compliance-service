@@ -21,11 +21,15 @@ export class Tools {
   constructor(
     private config: ConfigService,
     private readonly httpService: HttpService,
-    private prisma : PrismaService,
+    private prisma: PrismaService,
   ) {}
 
   // tranform dat into { day?: string; month?: string; year?: string }
-  transformDate(inputDate: string): { day?: string; month?: string; year?: string } {
+  transformDate(inputDate: string): {
+    day?: string;
+    month?: string;
+    year?: string;
+  } {
     const message = `${inputDate} is Invalid date`;
     if (inputDate.length < 4) {
       throw message;
@@ -111,7 +115,9 @@ export class Tools {
 
     if (!existsSync(join(process.cwd(), SOURCE_DIR))) {
       mkdirSync(join(process.cwd(), SOURCE_DIR));
-      console.log('sanction source directory created');
+      console.log(
+        'sanction source directory created ' + join(process.cwd(), SOURCE_DIR),
+      );
     }
 
     const response = await firstValueFrom(
@@ -134,6 +140,7 @@ export class Tools {
 
   readJsonFile(fileName: string) {
     const SOURCE_DIR = this.config.get('SOURCE_DIR');
+    join(process.cwd(), SOURCE_DIR + fileName)
     const rawData = readFileSync(
       join(process.cwd(), SOURCE_DIR + fileName),
       'utf-8',
@@ -167,8 +174,8 @@ export class Tools {
     return data;
   }
 
-  toArray(element: any){
-    if (element instanceof Array) return element
+  toArray(element: any) {
+    if (element instanceof Array) return element;
     return [element];
   }
   extractDate(stringDate: string) {
@@ -217,7 +224,6 @@ export class Tools {
           result = await this.prisma.sanctioned.createMany({ data: data });
         }
 
-
         count += result.count;
       }
     }
@@ -239,5 +245,4 @@ export class Tools {
     const deleted = (await col.deleteMany({})).deletedCount;
     console.log(`${Number(deleted)} element(s) deleted`);
   }
-  
 }
