@@ -31,10 +31,10 @@ export class MigrationService {
   async test() {
 
     //get and clean sanctioned
-    //await this.iatSanctionedProvider.getSanctionedIta();
+    await this.iatSanctionedProvider.getSanctionedIta();
     await this.iatSanctionedProvider.mapSanctionedIta();
 
-    
+
 
     //map & write sanction list
     await this.sactionProvider.mapSanction();
