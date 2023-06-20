@@ -73,7 +73,7 @@ echo UE_SOURCE=${UE_SOURCE} >> .env;
       }
     }
 
-    stage('start app') {a
+    stage('start app') {
       steps {
         sh 'docker rm --force --volumes kmx-compliance-service'
         sh '''docker compose up --wait
