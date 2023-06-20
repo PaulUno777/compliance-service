@@ -5,6 +5,7 @@ import { HttpModule } from '@nestjs/axios';
 import { IatSanctionedProvider } from './iat-sanctioned.provider';
 import { DgtSanctionedProvider } from './dgt-sanctioned.provider';
 import { UnSanctionedProvider } from './un-sanctioned.provider';
+import { UeSanctionedProvider } from './ue-sanctioned.provider';
 
 @Global()
 @Module({
@@ -15,6 +16,7 @@ import { UnSanctionedProvider } from './un-sanctioned.provider';
     IatSanctionedProvider,
     DgtSanctionedProvider,
     UnSanctionedProvider,
+    UeSanctionedProvider,
   ],
   exports: [
     Tools,
@@ -22,6 +24,7 @@ import { UnSanctionedProvider } from './un-sanctioned.provider';
     IatSanctionedProvider,
     DgtSanctionedProvider,
     UnSanctionedProvider,
+    UeSanctionedProvider,
   ],
 })
 export class HelperModule {}
