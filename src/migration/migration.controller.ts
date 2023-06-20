@@ -15,4 +15,9 @@ export class MigrationController {
   async test() {
     return await this.migrationService.test();
   }
+
+  @Get('update')
+  async update() {
+    return this.migrationService.updateAllToMongo();
+  }
 }
