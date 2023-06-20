@@ -115,9 +115,7 @@ export class Tools {
 
     if (!existsSync(join(process.cwd(), SOURCE_DIR))) {
       mkdirSync(join(process.cwd(), SOURCE_DIR));
-      console.log(
-        'sanction source directory created ' + join(process.cwd(), SOURCE_DIR),
-      );
+      console.log('sanction source directory created');
     }
 
     const response = await firstValueFrom(
@@ -140,7 +138,7 @@ export class Tools {
 
   readJsonFile(fileName: string) {
     const SOURCE_DIR = this.config.get('SOURCE_DIR');
-    join(process.cwd(), SOURCE_DIR + fileName)
+    join(process.cwd(), SOURCE_DIR + fileName);
     const rawData = readFileSync(
       join(process.cwd(), SOURCE_DIR + fileName),
       'utf-8',
@@ -178,6 +176,7 @@ export class Tools {
     if (element instanceof Array) return element;
     return [element];
   }
+
   extractDate(stringDate: string) {
     const date = new Date(stringDate);
     const day: any = date.getDate().toString().padStart(2, '0');
@@ -245,4 +244,20 @@ export class Tools {
     const deleted = (await col.deleteMany({})).deletedCount;
     console.log(`${Number(deleted)} element(s) deleted`);
   }
+
+  async downloadData(fileName: string) {
+    const downloadLink =
+      'http://localhost:3000/api/migration/download/' + fileName;
+    const response = await firstValueFrom(
+      this.httpService.get(downloadLink).pipe(
+        catchError((error) => {
+          this.logger.error(error);
+          throw `An error happened with ${downloadLink}!`;
+        }),
+      ),
+    );
+    const jsonData = response.data;
+    return jsonData;
+  }
+
 }

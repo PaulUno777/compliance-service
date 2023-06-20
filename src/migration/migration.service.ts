@@ -29,14 +29,12 @@ export class MigrationService {
   }
 
   async test() {
-    const client = this.tools.getMongoClient();
-    await this.tools
-      .mongoDeleteMany('Sanctioned', client)
-      .finally(() => client.close());
 
     //get and clean sanctioned
-    await this.iatSanctionedProvider.getSanctionedIta();
+    //await this.iatSanctionedProvider.getSanctionedIta();
     await this.iatSanctionedProvider.mapSanctionedIta();
+
+    
 
     //map & write sanction list
     await this.sactionProvider.mapSanction();

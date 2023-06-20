@@ -25,7 +25,7 @@ export class IatSanctionedProvider {
   async mapSanctionedIta() {
     this.logger.log('====== Mapping Cleaning & Saving data From ITA Source...');
     const SOURCE_DIR = this.config.get('SOURCE_DIR');
-    const dataIat = await this.tools.readJsonFile('liste_ITA.json');
+    const dataIat = await this.tools.downloadData('liste_ITA.json');
 
     //==== ---- Lists ---- ====
     const sourceList = dataIat.sources_used;
@@ -362,7 +362,7 @@ export class IatSanctionedProvider {
   async migrateSanctionedIta() {
     this.logger.log('migrationg ITA sanctioned Collection...');
     //Get the data from source file
-    const { results } = await this.tools.readJsonFile('clean_ITA.json');
+    const { results } = await this.tools.downloadData('clean_ITA.json');
     //migrate all to MongoDB
     return await this.tools.migrateSanctioned(results);
   }

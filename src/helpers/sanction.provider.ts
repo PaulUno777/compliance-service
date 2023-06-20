@@ -18,7 +18,7 @@ export class SanctionProvider {
     //---- list file
     let lists = [];
     //---- ITA
-    const listIta = await this.tools.readJsonFile('clean_ITA.json');
+    const listIta = await this.tools.downloadData('clean_ITA.json');
     lists = lists.concat(listIta.lists);
 
     const sourceLinkFile = `${SOURCE_DIR}clean_list.json`;
@@ -30,7 +30,7 @@ export class SanctionProvider {
   // //======= Method for sanctionList migration =========
   async migrateSanctionList() {
     this.logger.log('migrating sanction List');
-    const data = await this.tools.readJsonFile('clean_list.json');
+    const data = await this.tools.downloadData('clean_list.json');
     //init MongoDB collection
     const { id, ...oneData } = data[0];
     await this.prisma.sanctionList.create({
