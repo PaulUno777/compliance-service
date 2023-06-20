@@ -33,3 +33,10 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# env variables files 
+.env
+
+# public folder
+/public
+/sanctions_source

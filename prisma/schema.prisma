@@ -9,3 +9,124 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model SanctionList {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name            String
+  publicationDate DateTime? @db.Date
+  sourceUrl       String?
+  importRate      String?   @default("Weekly")
+
+  lastImported      DateTime @default(now())
+  sourceLastUpdated DateTime @default(now())
+
+  santioned Sanctioned[]
+}
+
+model Sanctioned {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  Sanction SanctionList @relation(fields: [listId], references: [id])
+  listId   String       @db.ObjectId
+
+  firstName      String?
+  middleName     String?
+  lastName       String?
+  defaultName    String?
+  gender         Gender?
+  type           String?
+  akas           String[]      @default([])
+  datesOfBirth    DateObject[]
+  placesOfBirth   Address[]
+  title          String?
+  remarks        String?
+  programs       String[]      @default([])
+  references     String[]      @default([])
+  publicationUrl String?
+
+  addresses     Address[]
+  nationalities Country[]
+  citizenships  Country[]
+  othersInfos   Info[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model PoliticallyExposed {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  firstName         String?
+  lastName          String?
+  defaultName       String?
+  alias             String[]
+  type              String?
+  gender            String?
+  positions         String[]
+  notes             String[]
+  datesOfBirth       DateObject[]
+  incorporationDate DateObject?
+  placesOfBirth      Address[]
+  websites          String?
+  publicationUrl    String?
+
+  addresses     Address[]
+  nationalities Country[]
+  citizenships  Country[]
+  othersInfos   Info[]
+  relationships Relationship[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+type Relationship {
+  nature            String?
+  defaultName       String?
+  type              String?
+  alias             String[]
+  gender            String?
+  positions         String?
+  notes             String[]
+  deathDate         String?
+  dateOfBirth       DateObject[]
+  incorporationDate DateObject?
+  placeOfBirth      Address[]
+  nationalities     Country[]
+  citizenships      Country[]
+}
+
+type Info {
+  type           String?
+  value          Json?
+  comment        String?
+  issueDate      String?
+  expirationDate String?
+}
+
+enum Gender {
+  Male
+  Female
+  Unknown
+  MALE
+  FEMALE
+}
+
+type Country {
+  isoCode String?
+  name    String?
+}
+
+type DateObject {
+  day   String?
+  month String?
+  year  String?
+}
+
+type Address {
+  place           String?
+  stateOrProvince String?
+  postalCode      String?
+  country         Country?
+}
