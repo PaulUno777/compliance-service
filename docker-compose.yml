@@ -1,0 +1,11 @@
+version: "3"
+services:
+  server:
+    container_name: kmx-compliance-service
+    image: unoteck/kmx-compliance-service
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 3100:3000
+      - 5250:3000
