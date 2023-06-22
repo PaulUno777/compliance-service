@@ -3,15 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import { createWriteStream } from 'fs';
 import { Tools } from './tools';
 import { getAlpha2Code, getName } from 'i18n-iso-countries';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UnSanctionedProvider {
-  private readonly logger = new Logger();
+  private readonly logger = new Logger(UnSanctionedProvider.name);
   constructor(
     private config: ConfigService,
     private tools: Tools,
-    private prisma: PrismaService,
   ) {}
 
   // International Trade Administration sanction source
@@ -70,20 +68,20 @@ export class UnSanctionedProvider {
       if (item.gender && item.gender !== 'Unknown' && item.gender !== '') {
         entity['gender'] = item.gender;
       }
-      //====akas
-      const akas = [];
+      //====alias
+      const alias = [];
       if (item.individual_alias) {
         if (item.individual_alias instanceof Array) {
           item.individual_alias.forEach((aka) => {
-            if (aka.alias_name !== '') akas.push(aka.alias_name);
+            if (aka.alias_name !== '') alias.push(aka.alias_name);
           });
         } else {
           if (item.individual_alias.alias_name !== '')
-            akas.push(item.individual_alias.alias_name);
+          alias.push(item.individual_alias.alias_name);
         }
       }
-      if (item.name_original_script) akas.push(item.name_original_script);
-      entity['akas'] = akas;
+      if (item.name_original_script) alias.push(item.name_original_script);
+      entity['alias'] = alias;
       //====remarks
       if (item.comments1 && item.comments1 !== '')
         entity['remarks'] = item.comments1;
@@ -291,20 +289,20 @@ export class UnSanctionedProvider {
         references: [],
         addresses: [],
       };
-      //====akas
-      const akas = [];
+      //====alias
+      const alias = [];
       if (item.entity_alias) {
         if (item.entity_alias instanceof Array) {
           item.entity_alias.forEach((aka) => {
-            if (aka.alias_name !== '') akas.push(aka.alias_name);
+            if (aka.alias_name !== '') alias.push(aka.alias_name);
           });
         } else {
           if (item.entity_alias.alias_name !== '')
-            akas.push(item.entity_alias.alias_name);
+          alias.push(item.entity_alias.alias_name);
         }
       }
-      if (item.name_original_script) akas.push(item.name_original_script);
-      entity['akas'] = akas;
+      if (item.name_original_script) alias.push(item.name_original_script);
+      entity['alias'] = alias;
       //====remarks
       if (item.comments1 && item.comments1 !== '')
         entity['remarks'] = item.comments1;
@@ -378,13 +376,11 @@ export class UnSanctionedProvider {
   }
 
   async migrateSanctioned() {
-    this.logger.log('migrationg ITA sanctioned Collection...');
+    this.logger.log('migrationg UN sanctioned Collection...');
     //Get the data from source file
     const { results } = await this.tools.downloadData('clean_UN.json');
-    //migrate all to MongoDB
 
-    //const list = results.slice(300, 350);
-
+    //migrate  to MongoDB
     return await this.tools.migrate(results);
   }
 }

@@ -8,7 +8,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class SanctionProvider {
-  private readonly logger = new Logger();
+  private readonly logger = new Logger(SanctionProvider.name);
   constructor(
     private config: ConfigService,
     private tools: Tools,

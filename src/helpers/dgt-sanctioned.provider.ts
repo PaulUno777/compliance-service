@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class DgtSanctionedProvider {
-  private readonly logger = new Logger();
+  private readonly logger = new Logger(DgtSanctionedProvider.name);
   constructor(
     private config: ConfigService,
     private tools: Tools,
@@ -69,13 +69,13 @@ export class DgtSanctionedProvider {
           if (detail.Valeur[0].Sexe == 'Masculin') entity['gender'] = 'Male';
           if (detail.Valeur[0].Sexe == 'Féminin') entity['gender'] = 'Female';
         }
-        //==== akas
+        //==== alias
         if (detail.TypeChamp == 'ALIAS') {
-          const akas = [];
+          const alias = [];
           detail.Valeur.forEach((aka) => {
-            akas.push(aka.Alias);
+            alias.push(aka.Alias);
           });
-          entity['akas'] = akas;
+          entity['alias'] = alias;
         }
         //==== remarks
         if (detail.TypeChamp == 'MOTIFS')
@@ -253,13 +253,11 @@ export class DgtSanctionedProvider {
   }
 
   async migrateSanctioned() {
-    this.logger.log('migrationg ITA sanctioned Collection...');
+    this.logger.log('migrationg DGT sanctioned Collection...');
     //Get the data from source file
     const { results } = await this.tools.downloadData('clean_DGT.json');
-    //migrate all to MongoDB
 
-    //const list = results.slice(1, 10);
-
+    //migrate  to MongoDB
     return await this.tools.migrate(results);
   }
 }

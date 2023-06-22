@@ -6,6 +6,7 @@ import { IatSanctionedProvider } from './iat-sanctioned.provider';
 import { DgtSanctionedProvider } from './dgt-sanctioned.provider';
 import { UnSanctionedProvider } from './un-sanctioned.provider';
 import { UeSanctionedProvider } from './ue-sanctioned.provider';
+import { ExposedProvider } from './exposed.provider';
 
 @Global()
 @Module({
@@ -17,6 +18,7 @@ import { UeSanctionedProvider } from './ue-sanctioned.provider';
     DgtSanctionedProvider,
     UnSanctionedProvider,
     UeSanctionedProvider,
+    ExposedProvider,
   ],
   exports: [
     Tools,
@@ -25,6 +27,7 @@ import { UeSanctionedProvider } from './ue-sanctioned.provider';
     DgtSanctionedProvider,
     UnSanctionedProvider,
     UeSanctionedProvider,
+    ExposedProvider,
   ],
 })
 export class HelperModule {}

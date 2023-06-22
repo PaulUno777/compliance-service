@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class IatSanctionedProvider {
-  private readonly logger = new Logger();
+  private readonly logger = new Logger(IatSanctionedProvider.name);
   constructor(
     private config: ConfigService,
     private tools: Tools,
@@ -139,8 +139,8 @@ export class IatSanctionedProvider {
       //==== type
       if (item.type) entity['type'] = item.type;
 
-      //==== akas
-      if (item.alt_names) entity['akas'] = item.alt_names;
+      //==== alias
+      if (item.alt_names) entity['alias'] = item.alt_names;
       //==== date of birth
       if (
         item.dates_of_birth &&
@@ -363,8 +363,8 @@ export class IatSanctionedProvider {
     this.logger.log('migrationg ITA sanctioned Collection...');
     //Get the data from source file
     const { results } = await this.tools.downloadData('clean_ITA.json');
+
     //migrate all to MongoDB
     return await this.tools.migrate(results);
   }
-  
 }

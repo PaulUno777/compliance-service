@@ -18,7 +18,7 @@ model SanctionList {
   sourceUrl       String?
   importRate      String?   @default("Weekly")
 
-  lastImported     DateTime @default(now())
+  lastImported      DateTime @default(now())
   sourceLastUpdated DateTime @default(now())
 
   santioned Sanctioned[]
@@ -36,13 +36,13 @@ model Sanctioned {
   defaultName    String?
   gender         Gender?
   type           String?
-  akas           String[]      @default([])
-  datesOfBirth    DateObject[]
-  placesOfBirth   Address[]
+  alias          String[]     @default([])
+  datesOfBirth   DateObject[]
+  placesOfBirth  Address[]
   title          String?
   remarks        String?
-  programs       String[]      @default([])
-  references     String[]      @default([])
+  programs       String[]     @default([])
+  references     String[]     @default([])
   publicationUrl String?
 
   addresses     Address[]
@@ -65,10 +65,10 @@ model PoliticallyExposed {
   gender            String?
   positions         String[]
   notes             String[]
-  datesOfBirth       DateObject[]
-  incorporationDate DateObject?
-  placesOfBirth      Address[]
-  websites          String?
+  datesOfBirth      DateObject[]
+  incorporationDate DateObject[]
+  title             String[]
+  placesOfBirth     Address[]
   publicationUrl    String?
 
   addresses     Address[]
@@ -86,13 +86,14 @@ type Relationship {
   defaultName       String?
   type              String?
   alias             String[]
+  links             String[]
   gender            String?
-  positions         String?
+  positions         String[]
   notes             String[]
   deathDate         String?
-  dateOfBirth       DateObject[]
-  incorporationDate DateObject?
-  placeOfBirth      Address[]
+  datesOfBirth      DateObject[]
+  incorporationDate DateObject[]
+  placesOfBirth     Address[]
   nationalities     Country[]
   citizenships      Country[]
 }

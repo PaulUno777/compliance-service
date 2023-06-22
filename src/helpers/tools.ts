@@ -136,6 +136,32 @@ export class Tools {
     writeStream.end();
   }
 
+  async saveJsonFromJsonSpecial(downloadLink: string, fileName: string): Promise<any> {
+    const SOURCE_DIR = this.config.get('SOURCE_DIR');
+
+    if (!existsSync(join(process.cwd(), SOURCE_DIR))) {
+      mkdirSync(join(process.cwd(), SOURCE_DIR));
+      console.log('sanction source directory created');
+    }
+
+    const response = await firstValueFrom(
+      this.httpService.get(downloadLink).pipe(
+        catchError((error) => {
+          this.logger.error(error);
+          throw `An error happened with ${fileName} source!`;
+        }),
+      ),
+    );
+    const jsonData = response.data;
+    const jsonFilePath = `${SOURCE_DIR}${fileName}.json`;
+    const writeStream = createWriteStream(jsonFilePath);
+    writeStream.write(jsonData);
+    this.logger.log(
+      `Successfully get and write data to ${SOURCE_DIR}${fileName}.json`,
+    );
+    writeStream.end();
+  }
+
   readJsonFile(fileName: string) {
     const SOURCE_DIR = this.config.get('SOURCE_DIR');
     join(process.cwd(), SOURCE_DIR + fileName);
@@ -212,13 +238,13 @@ export class Tools {
     let result;
     let count = 0;
     //ITA
-    if (list.length <= 1000) {
+    if (list.length <= 100) {
       result = await this.prisma.sanctioned.createMany({ data: list });
       count += result.count;
     } else {
-      for (let i = 0; i <= list.length; i += 1000) {
+      for (let i = 0; i <= list.length; i += 100) {
         if (i >= list.length) i = list.length;
-        data = list.slice(i, i + 1000);
+        data = list.slice(i, i + 100);
         if (data.length > 0) {
           result = await this.prisma.sanctioned.createMany({ data: data });
         }
@@ -245,7 +271,7 @@ export class Tools {
     const database = client.db('compliance_db');
     const col = database.collection(collection);
     const deleted = (await col.deleteMany({})).deletedCount;
-    console.log(`${Number(deleted)} element(s) deleted`);
+    console.log(`${Number(deleted)} element(s) deleted on ${collection}`);
   }
 
   async downloadData(fileName: string) {
@@ -255,11 +281,13 @@ export class Tools {
       this.httpService.get(downloadLink).pipe(
         catchError((error) => {
           this.logger.error(error);
-          throw `An error happened with ${downloadLink}!`;
+          throw `An error happened with ${downloadLink}!`;  
+
         }),
       ),
     );
     const jsonData = response.data;
     return jsonData;
   }
+  
 }

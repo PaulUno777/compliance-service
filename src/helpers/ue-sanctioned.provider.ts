@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UeSanctionedProvider {
-  private readonly logger = new Logger();
+  private readonly logger = new Logger(UeSanctionedProvider.name);
   constructor(
     private config: ConfigService,
     private tools: Tools,
@@ -47,7 +47,7 @@ export class UeSanctionedProvider {
       };
       const othersInfos = [];
 
-      // ==== names & akas & gender & title
+      // ==== names & alias & gender & title
       if (item.namealias) {
         const names = item.namealias;
         const alias = [];
@@ -73,7 +73,7 @@ export class UeSanctionedProvider {
             title = `${title} ${names[0].value.function}`;
 
           if (title !== '') entity['title'] = title;
-          //----akas
+          //----alias
           names.forEach((elt, i) => {
             if (i !== 0) {
               alias.push(elt.value.wholeName);
@@ -90,7 +90,7 @@ export class UeSanctionedProvider {
                 });
             }
           });
-          entity['akas'] = alias;
+          entity['alias'] = alias;
         } else {
           //----names
           if (names.value.firstName !== '')
@@ -172,11 +172,12 @@ export class UeSanctionedProvider {
             placData['stateOrProvince'] = date.value.region;
           }
           // add place element
-          if (placData['place'] || placData['country']) cleanPlaces.push(placData);
+          if (placData['place'] || placData['country'])
+            cleanPlaces.push(placData);
         });
 
-        if(cleanDates.length > 0) entity['datesOfBirth'] = cleanDates
-        if(cleanPlaces.length > 0) entity['placesOfBirth'] = cleanPlaces
+        if (cleanDates.length > 0) entity['datesOfBirth'] = cleanDates;
+        if (cleanPlaces.length > 0) entity['placesOfBirth'] = cleanPlaces;
       }
 
       //==== programs
@@ -278,7 +279,6 @@ export class UeSanctionedProvider {
             } else {
               data['isoCode'] = country.value.countryIso2Code;
               data['name'] = country.value.countryDescription;
-              
             }
           }
 
@@ -306,13 +306,11 @@ export class UeSanctionedProvider {
   }
 
   async migrateSanctioned() {
-    this.logger.log('migrationg ITA sanctioned Collection...');
+    this.logger.log('migrationg UE sanctioned Collection...');
     //Get the data from source file
     const { results } = await this.tools.downloadData('clean_UE.json');
-    //migrate all to MongoDB
 
-    //const list = results.slice(100, 105);
-
+    //migrate to MongoDB
     return await this.tools.migrate(results);
   }
 }
