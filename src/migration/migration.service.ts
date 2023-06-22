@@ -39,35 +39,39 @@ export class MigrationService {
       await this.dgtSanctionedProvider.migrateSanctioned(),
       await this.unSanctionedProvider.migrateSanctioned(),
       await this.ueSanctionedProvider.migrateSanctioned(),
-      //await this.exposedProvider.migrateExposed(),
     ]);
     this.logger.log('All is well !');
     return result;
   }
 
   async test() {
-    await this.exposedProvider.migrateExposed();   
+    await this.exposedProvider.migrateExposed();
+  }
+
+  //method to retrieve & migrate PEP data every sunday at midnight
+  @Cron('0 0 * * 0')
+  async updatePep() {
+    await this.exposedProvider.getExposed();
+    await this.exposedProvider.migrateExposed();
   }
 
   //all methods that retrieve data from source every night
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async getUpdate() {
     //= = = = = get and clean sanctioned
-    //await this.iatSanctionedProvider.getSanctioned();
+    await this.iatSanctionedProvider.getSanctioned();
     await this.iatSanctionedProvider.mapSanctioned();
 
-    //await this.dgtSanctionedProvider.getSanctioned();
+    await this.dgtSanctionedProvider.getSanctioned();
     await this.dgtSanctionedProvider.mapSanctioned();
 
-    //await this.unSanctionedProvider.getSanctioned();
+    await this.unSanctionedProvider.getSanctioned();
     await this.unSanctionedProvider.mapSanctioned();
 
-    //await this.ueSanctionedProvider.getSanctioned();
+    await this.ueSanctionedProvider.getSanctioned();
     await this.ueSanctionedProvider.mapSanctioned();
 
     //= = = = = map & write sanction list
     await this.sactionProvider.mapSanction();
-
-    //await this.exposedProvider.getExposed()
   }
 }
