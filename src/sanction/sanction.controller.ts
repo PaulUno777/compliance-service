@@ -11,4 +11,5 @@ export class SanctionController {
   findAll() {
     return this.sanctionService.findAll();
   }
+  
 }

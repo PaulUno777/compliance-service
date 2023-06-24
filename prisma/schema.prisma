@@ -33,7 +33,7 @@ model Sanctioned {
   firstName      String?
   middleName     String?
   lastName       String?
-  defaultName    String?
+  defaultName    String
   gender         Gender?
   type           String?
   alias          String[]     @default([])
@@ -59,7 +59,7 @@ model PoliticallyExposed {
 
   firstName         String?
   lastName          String?
-  defaultName       String?
+  defaultName       String
   alias             String[]
   type              String?
   gender            String?

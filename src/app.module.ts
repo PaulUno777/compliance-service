@@ -6,6 +6,8 @@ import { MigrationModule } from './migration/migration.module';
 import { HelperModule } from './helpers/helper.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { SanctionModule } from './sanction/sanction.module';
+import { SearchModule } from './search/search.module';
+import { ExposedModule } from './exposed/exposed.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { SanctionModule } from './sanction/sanction.module';
     MigrationModule,
     HelperModule,
     SanctionModule,
+    SearchModule,
+    ExposedModule,
   ],
   providers: [MigrationService,],
 })
