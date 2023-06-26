@@ -360,7 +360,9 @@ export class UnSanctionedProvider {
       return entity;
     });
 
+
     const cleanData = cleanEntities.concat(cleanIndividual);
+
     const finalData = {
       lists: list,
       results: cleanData,

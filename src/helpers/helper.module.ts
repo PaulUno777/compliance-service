@@ -7,6 +7,7 @@ import { DgtSanctionedProvider } from './dgt-sanctioned.provider';
 import { UnSanctionedProvider } from './un-sanctioned.provider';
 import { UeSanctionedProvider } from './ue-sanctioned.provider';
 import { ExposedProvider } from './exposed.provider';
+import { SearchTools } from './search-tools';
 
 @Global()
 @Module({
@@ -19,6 +20,7 @@ import { ExposedProvider } from './exposed.provider';
     UnSanctionedProvider,
     UeSanctionedProvider,
     ExposedProvider,
+    SearchTools,
   ],
   exports: [
     Tools,
@@ -28,6 +30,7 @@ import { ExposedProvider } from './exposed.provider';
     UnSanctionedProvider,
     UeSanctionedProvider,
     ExposedProvider,
+    SearchTools,
   ],
 })
 export class HelperModule {}

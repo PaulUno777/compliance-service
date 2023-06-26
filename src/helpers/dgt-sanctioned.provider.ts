@@ -236,7 +236,8 @@ export class DgtSanctionedProvider {
       });
       entity['othersInfos'] = othersInfos;
       return entity;
-    });
+    })
+
     const finalData = {
       lists: list,
       results: cleanSource,

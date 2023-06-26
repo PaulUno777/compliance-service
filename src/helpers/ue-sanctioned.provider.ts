@@ -288,7 +288,7 @@ export class UeSanctionedProvider {
 
       entity['othersInfos'] = othersInfos;
       return entity;
-    });
+    })
 
     const finalData = {
       lists: list,

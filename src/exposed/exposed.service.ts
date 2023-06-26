@@ -9,7 +9,8 @@ export class ExposedService {
   constructor(private prisma: PrismaService, private config: ConfigService) {}
 
   async findAll(page?: number, limit?: number, orderBy?: string): Promise<any> {
-    this.logger.log('finding all sanctioned ordered and paginated...');
+    
+    this.logger.log('finding all Politically Exposed Persons ordered and paginated...');
 
     //parameters controls
     if (page) {

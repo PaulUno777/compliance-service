@@ -15,7 +15,7 @@ import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 
-@ApiTags('migration')
+@ApiTags('Migration')
 @Controller('migration')
 export class MigrationController {
   constructor(

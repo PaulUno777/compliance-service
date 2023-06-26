@@ -8,6 +8,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { SanctionModule } from './sanction/sanction.module';
 import { SearchModule } from './search/search.module';
 import { ExposedModule } from './exposed/exposed.module';
+import { SanctionedModule } from './sanctioned/sanctioned.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ExposedModule } from './exposed/exposed.module';
     SanctionModule,
     SearchModule,
     ExposedModule,
+    SanctionedModule,
   ],
   providers: [MigrationService,],
 })

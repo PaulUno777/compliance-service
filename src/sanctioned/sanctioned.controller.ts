@@ -2,8 +2,9 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { SanctionedService } from './sanctioned.service';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('sanctioned')
-@Controller('sanctioned')
+
+@ApiTags('Sanctioned')
+@Controller('Sanctioned')
 export class SanctionedController {
   constructor(private readonly sanctionedService: SanctionedService) {}
 
@@ -44,6 +45,17 @@ export class SanctionedController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.sanctionedService.findOne(id);
+  }
+
+  @Get('sanction/:sanctionId')
+  findBySanction(
+    @Param('sanctionId') sanctionId: string,
+    @Query() query: Record<string, any>,
+  ) {
+    return this.sanctionedService.findBySanction(
+      sanctionId,
+      Number(query.page),
+    );
   }
 
 }

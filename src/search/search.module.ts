@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { SearchController } from './search.controller';
-import { Sanctioned } from './sanctioned/sanctioned';
-import { Exposed } from './exposed/exposed';
+import { ExposedProvider } from './providers/exposed.provider';
+import { SanctionedProvider } from './providers/sanctioned.provider';
+
 
 @Module({
   controllers: [SearchController],
-  providers: [SearchService, Sanctioned, Exposed]
+  providers: [SearchService, SanctionedProvider, ExposedProvider],
 })
 export class SearchModule {}

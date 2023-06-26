@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SanctionService } from './sanction.service';
 
-@ApiTags('sanction')
+@ApiTags('Sanction')
 @Controller('sanction')
 export class SanctionController {
   constructor(private readonly sanctionService: SanctionService) {}
