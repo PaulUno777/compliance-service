@@ -337,7 +337,7 @@ export class SearchService {
             listId: { $toString: '$listId' },
             defaultName: '$defaultName',
             type: '$type',
-            alias: '$akas',
+            alias: '$alias',
           },
           sanction: {
             $arrayElemAt: ['$sanction', 0],
