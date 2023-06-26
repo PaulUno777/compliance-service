@@ -102,7 +102,7 @@ export class SearchService {
     const excelData = this.exposedProvider.mapExcelData(cleanedData, text);
     const file = await this.exposedProvider.generateExcel(excelData, text);
 
-    this.logger.log('(success !) all is well');
+    this.logger.log('< < < < (success !) all is well > > >');
 
     return {
       resultsCount: cleanedData.length,
@@ -112,7 +112,7 @@ export class SearchService {
   }
 
   //======== EXPOSED FILTERED SEARCH =================================
-  async searchFilteredExposed(body: SearchParam) {
+  async searchFilteredExposed(body: SearchParam): Promise<any> {
     this.logger.log('= = = = Searching Exposed and Filter = = = =');
     console.log(body);
     let maxEdits = 2;
@@ -250,7 +250,6 @@ export class SearchService {
     }
 
     //generate Excel file
-    this.logger.log('Generating Excel file ...');
     const downloadUrl = this.config.get('DOWNLOAD_URL');
     const excelData = this.exposedProvider.mapExcelData(
       filtered,
@@ -261,7 +260,7 @@ export class SearchService {
       body.fullName,
     );
 
-    this.logger.log('(success !) all is well');
+    this.logger.log('< < < <(success !) all is well > > > >');
     return {
       resultsCount: filtered.length,
       resultsFile: `${downloadUrl}${file}`,
@@ -271,7 +270,7 @@ export class SearchService {
 
   //======== SANCTIONED SIMPLE SEARCH =================================
   async searchSimpleSanctioned(text: string): Promise<any> {
-    this.logger.log('simple searching Sanctioned...');
+    this.logger.log('= = = = Searching Sanctioned and Filter = = = =');
     const regex = /[0-9]{4}/g;
     if (typeof text != 'string' || text.length <= 3 || regex.test(text))
       throw new BadRequestException(
@@ -374,7 +373,7 @@ export class SearchService {
     const excelData = this.sanctionedProvider.mapExcelData(cleanedData, text);
     const file = await this.sanctionedProvider.generateExcel(excelData, text);
 
-    this.logger.log('(success !) all is well');
+    this.logger.log('< < < <(success !) all is well > > > >');
 
     return {
       resultsCount: cleanedData.length,
@@ -384,8 +383,9 @@ export class SearchService {
   }
 
   //======== SANCTIONED FILTERED SEARCH =================================
-  async searchFilteredSanctioned(body: SearchParam) {
-    this.logger.log('Filtered searching ...');
+  async searchFilteredSanctioned(body: SearchParam): Promise<any> {
+    this.logger.log('= = = = Searching Santioned and Filter = = = =');
+
     console.log(body);
     let maxEdits = 2;
     let matchRate = 0.25;
@@ -538,7 +538,6 @@ export class SearchService {
     }
 
     //generate Excel file
-    this.logger.log('Generating Excel file ...');
     const downloadUrl = this.config.get('DOWNLOAD_URL');
     const excelData = this.sanctionedProvider.mapExcelData(
       filtered,
@@ -549,12 +548,11 @@ export class SearchService {
       body.fullName,
     );
 
-    this.logger.log('(success !) all is well');
+    this.logger.log('< < < < (success !) all is well > > > >');
     return {
       resultsCount: filtered.length,
       resultsFile: `${downloadUrl}${file}`,
       results: filtered,
     };
   }
-
 }
