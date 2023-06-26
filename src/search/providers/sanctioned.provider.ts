@@ -12,10 +12,7 @@ export class SanctionedProvider {
   private readonly logger = new Logger(SanctionedProvider.name);
   private readonly FILE_PATH;
 
-  constructor(
-    private searchTools: SearchTools,
-    private config: ConfigService,
-  ) {
+  constructor(private searchTools: SearchTools, private config: ConfigService) {
     this.FILE_PATH = this.config.get('FILE_LOCATION');
   }
 
@@ -63,14 +60,13 @@ export class SanctionedProvider {
     return cleanData;
   }
 
-
   //Apply nationality and date of birth filters to retrieved data
   filteredSearch(response: any[], body: SearchParam) {
     let filteredData = response;
 
     //filter by score if needed
     if (body.matchRate) {
-      this.logger.log('====== Filtering by score...');
+      this.logger.log('----- Filtering by score...');
       filteredData = filteredData.filter((value) => {
         return value.score >= body.matchRate;
       });
@@ -78,22 +74,27 @@ export class SanctionedProvider {
 
     //check if sanctionId is provided in request parameters
     if (body.sanction) {
-      this.logger.log('====== Filtering by sanction...');
+      this.logger.log('----- Filtering by sanction ...');
       filteredData = filteredData.filter((value) => {
         return body.sanction.includes(value.entity.sanction.id);
       });
       console.log({ filteredCount: filteredData.length });
     }
-  
+
     //filter by date of birth
     if (body.dob) {
-      this.logger.log('====== Filtering by date of birth...');
+      this.logger.log('----- Filtering by date of birth ...');
       if (body.dob.length != 4 && body.dob.length != 7)
         throw new BadRequestException('dob value must be YYYY-MM or YYYY');
 
       const tempData = filteredData.filter((value: any) => {
-        if (value.entity.dateOfBirth) {
-          return this.searchTools.checkDate(value.entity.dateOfBirth, body.dob);
+        if (value.entity.datesOfBirth) {
+          console.log(value.entity.datesOfBirth);
+          console.log(body.dob);
+          return this.searchTools.checkDate(
+            value.entity.datesOfBirth,
+            body.dob,
+          );
         }
       });
       filteredData = tempData;
@@ -101,23 +102,38 @@ export class SanctionedProvider {
     }
     //filter by nationalities
     if (body.nationality) {
-      this.logger.log('====== Filtering by natinality...');
+      this.logger.log('----- Filtering by natinality ...');
       const tempData = filteredData.filter((value: any) => {
         if (value.entity.nationalities) {
           for (const isoCode of body.nationality) {
-            if (this.searchTools.checkNationality(value.entity.nationalities, isoCode))
+            if (
+              this.searchTools.checkNationality(
+                value.entity.nationalities,
+                isoCode,
+              )
+            )
               return true;
           }
         }
         if (value.entity.citizenships) {
           for (const isoCode of body.nationality) {
-            if (this.searchTools.checkNationality(value.entity.citizenships, isoCode))
+            if (
+              this.searchTools.checkNationality(
+                value.entity.citizenships,
+                isoCode,
+              )
+            )
               return true;
           }
         }
         if (value.entity.placeOfBirth) {
           for (const isoCode of body.nationality) {
-            if (this.searchTools.checkPlaceOfBirth(value.entity.placeOfBirth, isoCode))
+            if (
+              this.searchTools.checkPlaceOfBirth(
+                value.entity.placeOfBirth,
+                isoCode,
+              )
+            )
               return true;
           }
         }

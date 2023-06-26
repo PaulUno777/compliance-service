@@ -2,7 +2,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ExposedService } from './exposed.service';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('PoliticallyExposed')
+@ApiTags('Politically Exposed Person (PEP)')
 @Controller('exposed')
 export class ExposedController {
   constructor(private readonly exposedService: ExposedService) {}

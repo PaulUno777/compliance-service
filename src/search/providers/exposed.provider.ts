@@ -65,7 +65,7 @@ export class ExposedProvider {
 
     //filter by score if needed
     if (body.matchRate) {
-      this.logger.log('====== Filtering by score...');
+      this.logger.log('----- Filtering by score...');
       filteredData = filteredData.filter((value) => {
         return value.score >= body.matchRate;
       });
@@ -73,38 +73,58 @@ export class ExposedProvider {
 
     //filter by date of birth
     if (body.dob) {
-      this.logger.log('====== Filtering by date of birth...');
+      this.logger.log('----- Filtering by date of birth...');
       if (body.dob.length != 4 && body.dob.length != 7)
         throw new BadRequestException('dob value must be YYYY-MM or YYYY');
 
       const tempData = filteredData.filter((value: any) => {
         if (value.entity.datesOfBirth) {
-          return this.searchProvider.checkDate(value.entity.datesOfBirth, body.dob);
+          console.log(value.entity.datesOfBirth);
+          console.log(body.dob);
+          return this.searchProvider.checkDate(
+            value.entity.datesOfBirth,
+            body.dob,
+          );
         }
       });
       filteredData = tempData;
-      console.log({ DOBfilteredCount: filteredData.length });
+      console.log({ Datefiltered: filteredData.length });
     }
 
     //filter by nationalities
     if (body.nationality) {
-      this.logger.log('====== Filtering by natinality...');
+      this.logger.log('----- Filtering by natinality...');
       const tempData = filteredData.filter((value: any) => {
         if (value.entity.nationalities) {
           for (const isoCode of body.nationality) {
-            if (this.searchProvider.checkNationality(value.entity.nationalities, isoCode))
+            if (
+              this.searchProvider.checkNationality(
+                value.entity.nationalities,
+                isoCode,
+              )
+            )
               return true;
           }
         }
         if (value.entity.citizenships) {
           for (const isoCode of body.nationality) {
-            if (this.searchProvider.checkNationality(value.entity.citizenships, isoCode))
+            if (
+              this.searchProvider.checkNationality(
+                value.entity.citizenships,
+                isoCode,
+              )
+            )
               return true;
           }
         }
         if (value.entity.placesOfBirth) {
           for (const isoCode of body.nationality) {
-            if (this.searchProvider.checkPlaceOfBirth(value.entity.placesOfBirth, isoCode))
+            if (
+              this.searchProvider.checkPlaceOfBirth(
+                value.entity.placesOfBirth,
+                isoCode,
+              )
+            )
               return true;
           }
         }
@@ -115,7 +135,6 @@ export class ExposedProvider {
 
     return filteredData;
   }
-
 
   mapExcelData(array: any[], searchInput: string): any[] {
     this.logger.log('----- Mapping data for Excel');

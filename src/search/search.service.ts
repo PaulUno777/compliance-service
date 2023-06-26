@@ -503,10 +503,10 @@ export class SearchService {
         sanction: {
           $arrayElemAt: ['$sanction', 0],
         },
-        alias: '$akas',
-        dateOfBirth: '$dateOfBirth',
-        placeOfBirth: '$placeOfBirth',
-        nationality: '$nationalities',
+        alias: '$alias',
+        datesOfBirth: '$datesOfBirth',
+        placesOfBirth: '$placesOfBirth',
+        nationalities: '$nationalities',
         citizenships: '$citizenships',
       },
     });
@@ -556,5 +556,5 @@ export class SearchService {
       results: filtered,
     };
   }
-  
+
 }

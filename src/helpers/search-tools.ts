@@ -4,7 +4,6 @@ import * as StringSimilarity from 'string-similarity';
 
 @Injectable()
 export class SearchTools {
-    
   // get all entity names rom his definition
   getAllNames(result: any) {
     let names = [];
@@ -30,15 +29,23 @@ export class SearchTools {
     return Number(data.toFixed(2));
   }
 
-  checkDate(responseDate, bodyDate: string): boolean {
+  checkDate(responseDates, bodyDate: string): boolean {
     let check = false;
     if (bodyDate.includes('-')) {
       const [year, month] = bodyDate.trim().split('-');
-      if (responseDate.year == year && responseDate.month == month)
-        check = true;
+      for (const date of responseDates) {
+        if (date.year == year && date.month == month) check = true;
+        break;
+      }
     } else {
-      if (responseDate.year == bodyDate.trim()) check = true;
+      for (const date of responseDates) {
+        if (date.year.trim() == bodyDate) {
+          check = true;
+          break;
+        }
+      }
     }
+
     return check;
   }
 
