@@ -268,7 +268,7 @@ export class Tools {
 
   async mongoDeleteMany(collection: string, client: MongoClient) {
     await client.connect();
-    const database = client.db('compliance_db');
+    const database = client.db('sanctionsexplorer');
     const col = database.collection(collection);
     const deleted = (await col.deleteMany({})).deletedCount;
     console.log(`${Number(deleted)} element(s) deleted on ${collection}`);
