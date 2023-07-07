@@ -17,7 +17,7 @@ export class UnSanctionedProvider {
     this.logger.log('====== Getting Sanstion From UN Source...');
     const url = this.config.get('UN_SOURCE');
     //request
-    await this.tools.saveJsonFromJson(url, 'liste_UN');
+    await this.tools.saveJsonFromXml(url, 'liste_UN');
   }
 
   async mapSanctioned() {
