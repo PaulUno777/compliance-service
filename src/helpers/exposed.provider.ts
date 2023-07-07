@@ -518,7 +518,7 @@ export class ExposedProvider {
       }
 
       dataArray.push(entity);
-      if (dataArray.length >= 1000) {
+      if (dataArray.length >= 500) {
         const result = await this.prisma.politicallyExposed.createMany({
           data: dataArray,
         });
@@ -526,11 +526,11 @@ export class ExposedProvider {
         dataArray = [];
       }
 
-      console.log(entity);
+      console.log(`${count} entities created !`);
     }
 
     this.logger.log({
-      message: `${Number(count)} element(s) migrated`,
+      message: `${Number(count)} element(s) finally migrated`,
     });
     //return dataArray;
   }

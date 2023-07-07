@@ -45,7 +45,6 @@ export class MigrationService {
   }
 
   async test() {
-    await this.getUpdate();
     await this.updatePep();
   }
 
