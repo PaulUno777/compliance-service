@@ -15,7 +15,7 @@ pipeline {
 
     stage('Add env variables') {
       environment {
-        DATABASE_URL = '\'mongodb+srv://pauluno777:Admin123@cluster0.0g35jrf.mongodb.net/compliance_db?retryWrites=true&w=majority\''
+        DATABASE_URL = '\'mongodb+srv://sanctionsexplorer:Sancti0nsP4ss@cluster0.nq3ns.gcp.mongodb.net/sanctionsexplorer?retryWrites=true&w=majority\''
         PER_PAGE = '20'
         PORT = '3000'
         FILE_LOCATION = '\'public/\''

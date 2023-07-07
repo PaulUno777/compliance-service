@@ -7,4 +7,5 @@ services:
     env_file:
       - .env
     ports:
-      - 3100:3000
+      - 3000:3000
+      - 5250:3000

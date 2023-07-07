@@ -45,7 +45,8 @@ export class MigrationService {
   }
 
   async test() {
-    await this.exposedProvider.migrateExposed();
+    await this.getUpdate();
+    await this.updatePep();
   }
 
   //method to retrieve & migrate PEP data every sunday at midnight
