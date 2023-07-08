@@ -56,7 +56,7 @@ export class MigrationService {
       .mongoDeleteMany('PoliticallyExposed', client)
       .finally(() => client.close());
       
-    //await this.exposedProvider.getExposed();
+    await this.exposedProvider.getExposed();
     await this.exposedProvider.migrateExposed();
   }
 
