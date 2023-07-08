@@ -25,7 +25,7 @@ export class MigrationController {
 
   @Get('test')
   async test() {
-    return await this.migrationService.test();
+    await this.migrationService.test();
   }
 
   @Get('update')

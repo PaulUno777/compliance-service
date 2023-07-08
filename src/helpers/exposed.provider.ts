@@ -523,7 +523,9 @@ export class ExposedProvider {
           data: dataArray,
         });
         count += result.count;
+
         dataArray = [];
+        console.log(count);
       }
     }
 
