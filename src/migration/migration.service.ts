@@ -56,12 +56,12 @@ export class MigrationService {
       .mongoDeleteMany('PoliticallyExposed', client)
       .finally(() => client.close());
     
-    await this.exposedProvider.getExposed();
+    //await this.exposedProvider.getExposed();
 
     await this.exposedProvider.migrateExposed();
   }
 
-  
+
   //all methods that retrieve data from source every night
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async getUpdate() {

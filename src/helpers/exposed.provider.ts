@@ -519,7 +519,7 @@ export class ExposedProvider {
 
       dataArray.push(entity);
      
-      if (dataArray.length >= 500) {
+      if (dataArray.length >= 1500) {
         
         const result = await this.prisma.politicallyExposed.createMany({
           data: dataArray,
