@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { DgtSanctionedProvider } from 'src/helpers/dgt-sanctioned.provider';
 import { ExposedProvider } from 'src/helpers/exposed.provider';
 import { IatSanctionedProvider } from 'src/helpers/iat-sanctioned.provider';
@@ -20,6 +20,7 @@ export class MigrationService {
     private ueSanctionedProvider: UeSanctionedProvider,
     private exposedProvider: ExposedProvider,
     private tools: Tools,
+    private schedulerRegistry: SchedulerRegistry,
   ) {}
 
   async updateAllToMongo() {
@@ -49,7 +50,7 @@ export class MigrationService {
   }
 
   //method to retrieve & migrate PEP data every sunday at midnight
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_DAY_AT_9PM)
   async updatePep() {
     const client = this.tools.getMongoClient();
     await this.tools
@@ -80,5 +81,9 @@ export class MigrationService {
 
     //= = = = = map & write sanction list
     await this.sactionProvider.mapSanction();
+
+    //m= = = = igrate all
+    this.updateAllToMongo();
   }
+
 }
