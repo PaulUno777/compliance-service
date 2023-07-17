@@ -34,6 +34,10 @@ export class SanctionProvider {
     const listUn = await this.tools.downloadData('clean_UN.json');
     lists = lists.concat(listUn.lists);
 
+    //---- UE
+    const listEn = await this.tools.downloadData('clean_UE.json');
+    lists = lists.concat(listEn.lists);
+
     const sourceLinkFile = `${SOURCE_DIR}clean_list.json`;
     const writeStream = createWriteStream(sourceLinkFile);
     writeStream.write(JSON.stringify(lists));
