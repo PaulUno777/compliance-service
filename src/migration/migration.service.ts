@@ -51,14 +51,17 @@ export class MigrationService {
 
   //method to retrieve & migrate PEP data every sunday at midnight
   @Cron(CronExpression.EVERY_DAY_AT_9PM)
+  getPep() { 
+    await this.exposedProvider.getExposed();
+  }
+  
+  @Cron(CronExpression.EVERY_DAY_AT_10PM)
   async updatePep() {
     const client = this.tools.getMongoClient();
     await this.tools
       .mongoDeleteMany('PoliticallyExposed', client)
       .finally(() => client.close());
     
-    await this.exposedProvider.getExposed();
-
     await this.exposedProvider.migrateExposed();
   }
 
