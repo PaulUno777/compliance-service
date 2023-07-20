@@ -1,5 +1,7 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
+import { ConfigService } from '@nestjs/config';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { DgtSanctionedProvider } from 'src/helpers/dgt-sanctioned.provider';
 import { ExposedProvider } from 'src/helpers/exposed.provider';
 import { IatSanctionedProvider } from 'src/helpers/iat-sanctioned.provider';
@@ -20,7 +22,7 @@ export class MigrationService {
     private ueSanctionedProvider: UeSanctionedProvider,
     private exposedProvider: ExposedProvider,
     private tools: Tools,
-    private schedulerRegistry: SchedulerRegistry,
+    private config: ConfigService,
   ) {}
 
   async updateAllToMongo() {
@@ -45,26 +47,34 @@ export class MigrationService {
     return result;
   }
 
-  async test() {
+  async getTest() {
+    await this.getPep();
+  }
+
+  async pepUpdateTest() {
     await this.updatePep();
   }
 
   //method to retrieve & migrate PEP data every sunday at midnight
-  @Cron(CronExpression.EVERY_DAY_AT_9PM)
-  getPep() { 
-    await this.exposedProvider.getExposed();
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  async getPep() {
+    this.logger.log(
+      '====== Getting Politically Exposed Persons From Source...',
+    );
+    const url = this.config.get('PEP_SOURCE');
+    //request
+    await this.tools.saveJsonFromJsonSpecial(url, 'liste_PEP');
   }
-  
-  @Cron(CronExpression.EVERY_DAY_AT_10PM)
+
+  @Cron(CronExpression.EVERY_DAY_AT_3AM)
   async updatePep() {
     const client = this.tools.getMongoClient();
     await this.tools
       .mongoDeleteMany('PoliticallyExposed', client)
       .finally(() => client.close());
-    
+
     await this.exposedProvider.migrateExposed();
   }
-
 
   //all methods that retrieve data from source every night
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
@@ -88,5 +98,4 @@ export class MigrationService {
     //m= = = = igrate all
     this.updateAllToMongo();
   }
-
 }

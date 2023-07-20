@@ -1,9 +1,9 @@
-import { HttpService } from '@nestjs/axios';
+/* eslint-disable prettier/prettier */
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Tools } from './tools';
-import { createReadStream, createWriteStream } from 'fs';
-import { getName, getAlpha2Code } from 'i18n-iso-countries';
+import { createReadStream } from 'fs';
+import { getName } from 'i18n-iso-countries';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createInterface } from 'readline';
 
@@ -16,21 +16,9 @@ export class ExposedProvider {
     private prisma: PrismaService,
   ) {}
 
-  // International Trade Administration sanction source
-  async getExposed() {
-    this.logger.log(
-      '====== Getting Politically Exposed Persons From Source...',
-    );
-    const url = this.config.get('PEP_SOURCE');
-    //request
-    await this.tools.saveJsonFromJsonSpecial(url, 'liste_PEP');
-  }
-
   //==== ---- map and save sanction into file ---- ====
-  async mapExposed() {
-    this.logger.log(
-      '====== Getting & Mapping Politically Exposed Persons From Saved File...',
-    );
+  async migrateExposed() {
+    this.logger.log('Migrating Politically Exposed Persons List...');
     const SOURCE_DIR = this.config.get('SOURCE_DIR');
     const fileName = 'liste_PEP';
 
@@ -45,7 +33,7 @@ export class ExposedProvider {
       const obj = JSON.parse(line);
 
       let alias = [];
-      let otherInfos = [];
+      const otherInfos = [];
       let relations = [];
 
       const entity = {
@@ -289,7 +277,7 @@ export class ExposedProvider {
               }
 
               if (linkProp.country) {
-                let countries = linkProp.country
+                const countries = linkProp.country
                   .map((country) => {
                     const place = {
                       isoCode: country,
@@ -367,7 +355,7 @@ export class ExposedProvider {
 
               //citizenships
               if (linkProp.country) {
-                let countries = linkProp.country
+                const countries = linkProp.country
                   .map((country) => {
                     const place = {
                       isoCode: country,
@@ -388,7 +376,7 @@ export class ExposedProvider {
 
               //nationalities
               if (linkProp.nationality) {
-                let countries = linkProp.nationality
+                const countries = linkProp.nationality
                   .map((country) => {
                     const place = {
                       isoCode: country,
@@ -462,7 +450,7 @@ export class ExposedProvider {
 
               //citizenships
               if (linkProp.country) {
-                let countries = linkProp.country
+                const countries = linkProp.country
                   .map((country) => {
                     const place = {
                       isoCode: country,
@@ -483,7 +471,7 @@ export class ExposedProvider {
 
               //nationalities
               if (linkProp.nationality) {
-                let countries = linkProp.nationality
+                const countries = linkProp.nationality
                   .map((country) => {
                     const place = {
                       isoCode: country,
@@ -518,9 +506,9 @@ export class ExposedProvider {
       }
 
       dataArray.push(entity);
-     
-      if (dataArray.length >= 1500) {
-        
+
+      if (dataArray.length >= 2500) {
+        reader.pause();
         const result = await this.prisma.politicallyExposed.createMany({
           data: dataArray,
         });
@@ -529,22 +517,15 @@ export class ExposedProvider {
 
         dataArray = [];
         console.log(count);
+
+        setInterval(() => {
+          reader.resume();
+        }, 2000);
       }
     }
 
     this.logger.log({
-      message: `${Number(count)} element(s) finally migrated`,
+      message: `${Number(count)} PEP element(s) finally migrated`,
     });
-    //return dataArray;
-  }
-
-  // //======= Method for sanctionList migration =========
-  async migrateExposed() {
-    this.logger.log('migrating Politically Exposed Persons List...');
-    
-    const data = await this.mapExposed();
-    //const list = data.slice(0, 3)
-
-    return data;
   }
 }

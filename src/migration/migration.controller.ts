@@ -23,9 +23,14 @@ export class MigrationController {
     private config: ConfigService,
   ) {}
 
-  @Get('test')
+  @Get('getTest')
   async test() {
-    return this.migrationService.test();
+    return this.migrationService.getTest();
+  }
+
+  @Get('updateTest')
+  async updateTest() {
+    return this.migrationService.pepUpdateTest();
   }
 
   @Get('update')
