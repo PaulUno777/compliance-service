@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { SearchTools } from 'src/helpers/search-tools';
 import { ExposedSearchOutput } from '../dtos/exposed-search-output';
@@ -5,7 +6,6 @@ import { ConfigService } from '@nestjs/config';
 import { Workbook } from 'exceljs';
 import { existsSync, mkdirSync, unlink } from 'fs';
 import { join } from 'path';
-import { Country } from '@prisma/client';
 import { SearchParam } from '../dtos/search-param';
 
 @Injectable()

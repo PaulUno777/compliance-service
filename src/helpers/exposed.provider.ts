@@ -6,6 +6,7 @@ import { createReadStream } from 'fs';
 import { getName } from 'i18n-iso-countries';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createInterface } from 'readline';
+import { on } from 'events';
 
 @Injectable()
 export class ExposedProvider {
@@ -524,6 +525,16 @@ export class ExposedProvider {
       }
     }
 
+    reader.on('close', async () => {
+      const result = await this.prisma.politicallyExposed.createMany({
+        data: dataArray,
+      });
+      count += result.count;
+      console.log(count);
+    });
+
+    reader.close();
+    
     this.logger.log({
       message: `${Number(count)} PEP element(s) finally migrated`,
     });

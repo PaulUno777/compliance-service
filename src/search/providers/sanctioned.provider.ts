@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { sanctionedSearchOutput } from '../dtos/sanctioned-search-output';
 import { SearchTools } from 'src/helpers/search-tools';
