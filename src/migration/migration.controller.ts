@@ -35,7 +35,7 @@ export class MigrationController {
 
   @Get('update')
   async update() {
-    return this.migrationService.updateAllToMongo();
+    return this.migrationService.getUpdate();
   }
 
   @ApiExcludeEndpoint()
