@@ -18,16 +18,18 @@ export class ExposedProvider {
 
   //==== ---- map and save sanction into file ---- ====
   async migrateExposed() {
-    this.logger.log('Migrating Politically Exposed Persons List...');
+    this.logger.log('Migrating PEP Item...');
     const SOURCE_DIR = this.config.get('SOURCE_DIR');
     const fileName = 'liste_PEP';
+
+    const { length } = (await this.tools.downloadData('PEP_length.json')) | 0;
+    console.log(length);
 
     const stream = createReadStream(`${SOURCE_DIR}${fileName}.json`, {
       encoding: 'utf8',
     });
     const reader = createInterface({ input: stream, crlfDelay: Infinity });
-    const { length } = await this.tools.downloadData('PEP_length.json');
-    console.log(length);
+    
 
     let dataArray = [];
     let count = 0;
@@ -553,6 +555,8 @@ export class ExposedProvider {
     for await (const {} of reader) {
       length++;
     }
+
+    reader.close();
 
     const sourceLinkFile = `${SOURCE_DIR}PEP_length.json`;
     const writeStream = createWriteStream(sourceLinkFile);
