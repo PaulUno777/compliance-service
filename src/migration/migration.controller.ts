@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -23,19 +24,24 @@ export class MigrationController {
     private config: ConfigService,
   ) {}
 
-  @Get('getTest')
-  async test() {
-    return this.migrationService.getTest();
+  @Get('getPEP')
+  async getPep() {
+    return this.migrationService.getPep();
   }
 
-  @Get('updateTest')
-  async updateTest() {
-    return this.migrationService.pepUpdateTest();
+  @Get('updatePEP')
+  async updatePep() {
+    return this.migrationService.updatePep();
   }
 
-  @Get('update')
-  async update() {
+  @Get('getSanctioned')
+  async get() {
     return this.migrationService.getUpdate();
+  }
+
+  @Get('updateSanctioned')
+  async update() {
+    return this.migrationService.updateAllToMongo();
   }
 
   @ApiExcludeEndpoint()

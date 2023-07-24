@@ -10,6 +10,12 @@ import { SearchParam } from '../dtos/search-param';
 
 @Injectable()
 export class ExposedProvider {
+  migrateExposed() {
+    throw new Error('Method not implemented.');
+  }
+  checkPepLength() {
+    throw new Error('Method not implemented.');
+  }
   private readonly logger = new Logger(ExposedProvider.name);
   private readonly FILE_PATH;
 

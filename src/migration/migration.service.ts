@@ -25,61 +25,12 @@ export class MigrationService {
     private config: ConfigService,
   ) {}
 
-  async updateAllToMongo() {
-    //= = = = = delete all elements in collection
-    const client = this.tools.getMongoClient();
-    await this.tools
-      .mongoDeleteMany('Sanctioned', client)
-      .finally(() => client.close());
-
-    await this.tools
-      .mongoDeleteMany('PoliticallyExposed', client)
-      .finally(() => client.close());
-
-    const result = await Promise.all([
-      await this.sactionProvider.migrateSanctionList(),
-      await this.iatSanctionedProvider.migrateSanctioned(),
-      await this.dgtSanctionedProvider.migrateSanctioned(),
-      await this.unSanctionedProvider.migrateSanctioned(),
-      await this.ueSanctionedProvider.migrateSanctioned(),
-    ]);
-    this.logger.log('All is well !');
-    return result;
-  }
-
-  async getTest() {
-    await this.getPep();
-  }
-
-  async pepUpdateTest() {
-    await this.updatePep();
-  }
-
-  //method to retrieve & migrate PEP data every sunday at midnight
-  @Cron(CronExpression.EVERY_DAY_AT_1AM)
-  async getPep() {
-    this.logger.log(
-      '====== Getting Politically Exposed Persons From Source...',
-    );
-    const url = this.config.get('PEP_SOURCE');
-    //request
-    await this.tools.saveJsonFromJsonSpecial(url, 'liste_PEP');
-  }
-
-  @Cron(CronExpression.EVERY_DAY_AT_3AM)
-  async updatePep() {
-    const client = this.tools.getMongoClient();
-    await this.tools
-      .mongoDeleteMany('PoliticallyExposed', client)
-      .finally(() => client.close());
-
-    await this.exposedProvider.migrateExposed();
-  }
-
   //all methods that retrieve data from source every night
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async getUpdate() {
     //= = = = = get and clean sanctioned
+
+    this.logger.log('Downloading And Mapping All Sanctioned!');
 
     await this.dgtSanctionedProvider.getSanctioned();
     await this.dgtSanctionedProvider.mapSanctioned();
@@ -95,8 +46,46 @@ export class MigrationService {
 
     //= = = = = map & write sanction list
     await this.sactionProvider.mapSanction();
+  }
 
-    //m= = = = igrate all
-    this.updateAllToMongo();
+  @Cron(CronExpression.EVERY_DAY_AT_2AM)
+  async updateAllToMongo() {
+    //= = = = = delete all elements in collection
+    const client = this.tools.getMongoClient();
+    await this.tools
+      .mongoDeleteMany('Sanctioned', client)
+      .finally(() => client.close());
+
+    this.logger.log('Migrating All Sanctioned!');
+
+    const result = await Promise.all([
+      await this.sactionProvider.migrateSanctionList(),
+      await this.dgtSanctionedProvider.migrateSanctioned(),
+      await this.unSanctionedProvider.migrateSanctioned(),
+      await this.ueSanctionedProvider.migrateSanctioned(),
+      await this.iatSanctionedProvider.migrateSanctioned(),
+    ]);
+    this.logger.log('All is well !');
+    return result;
+  }
+
+  //method to retrieve & migrate PEP data every sunday at midnight
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  async getPep() {
+    this.logger.log('====== Getting PEP From Source...');
+    const url = this.config.get('PEP_SOURCE');
+    //request
+    await this.tools.saveJsonFromJsonSpecial(url, 'liste_PEP');
+    await this.exposedProvider.checkPepLength();
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_3AM)
+  async updatePep() {
+    const client = this.tools.getMongoClient();
+    await this.tools
+      .mongoDeleteMany('PoliticallyExposed', client)
+      .finally(() => client.close());
+
+    await this.exposedProvider.migrateExposed();
   }
 }

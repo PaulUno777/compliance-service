@@ -246,9 +246,9 @@ export class Tools {
       result = await this.prisma.sanctioned.createMany({ data: list });
       count += result.count;
     } else {
-      for (let i = 0; i <= list.length; i += 100) {
+      for (let i = 0; i <= list.length; i += 1000) {
         if (i >= list.length) i = list.length;
-        data = list.slice(i, i + 100);
+        data = list.slice(i, i + 1000);
         if (data.length > 0) {
           result = await this.prisma.sanctioned.createMany({ data: data });
         }

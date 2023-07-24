@@ -2,11 +2,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Tools } from './tools';
-import { createReadStream } from 'fs';
+import { createReadStream, createWriteStream } from 'fs';
 import { getName } from 'i18n-iso-countries';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createInterface } from 'readline';
-import { on } from 'events';
 
 @Injectable()
 export class ExposedProvider {
@@ -27,9 +26,13 @@ export class ExposedProvider {
       encoding: 'utf8',
     });
     const reader = createInterface({ input: stream, crlfDelay: Infinity });
+    const { length } = await this.tools.downloadData('PEP_length.json');
+    console.log(length);
 
     let dataArray = [];
     let count = 0;
+    let index = 0;
+
     for await (const line of reader) {
       const obj = JSON.parse(line);
 
@@ -507,17 +510,20 @@ export class ExposedProvider {
       }
 
       dataArray.push(entity);
+      index++;
 
-      if (dataArray.length >= 2500) {
+      if (dataArray.length >= 2500 || index == length) {
         reader.pause();
         const result = await this.prisma.politicallyExposed.createMany({
           data: dataArray,
         });
 
         count += result.count;
+        console.log(count);
+
+        if (index == length) break;
 
         dataArray = [];
-        console.log(count);
 
         setInterval(() => {
           reader.resume();
@@ -525,18 +531,36 @@ export class ExposedProvider {
       }
     }
 
-    reader.on('close', async () => {
-      const result = await this.prisma.politicallyExposed.createMany({
-        data: dataArray,
-      });
-      count += result.count;
-      console.log(count);
-    });
-
     reader.close();
-    
+
     this.logger.log({
       message: `${Number(count)} PEP element(s) finally migrated`,
+    });
+  }
+
+  async checkPepLength() {
+    let length = 0;
+
+    this.logger.log('Checking PEP Length. . .');
+    const SOURCE_DIR = this.config.get('SOURCE_DIR');
+    const fileName = 'liste_PEP';
+    const stream = createReadStream(`${SOURCE_DIR}${fileName}.json`, {
+      encoding: 'utf8',
+    });
+
+    const reader = createInterface({ input: stream, crlfDelay: Infinity });
+
+    for await (const {} of reader) {
+      length++;
+    }
+
+    const sourceLinkFile = `${SOURCE_DIR}PEP_length.json`;
+    const writeStream = createWriteStream(sourceLinkFile);
+    writeStream.write(JSON.stringify({ length: length }));
+    writeStream.end();
+
+    this.logger.log({
+      message: `PEP Length is ${length}`,
     });
   }
 }
