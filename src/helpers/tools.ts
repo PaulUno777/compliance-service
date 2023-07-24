@@ -236,7 +236,7 @@ export class Tools {
     //==== migrate all to MongoDB
     //push data in data in batches of 1000 to avoid errors and timeouts
     this.logger.log(
-      `Migrating To MongoDB Server . . .`,
+      `Migrating Sanctioned Items To MongoDB Server . . .`,
     );
     let data: any[];
     let result;
