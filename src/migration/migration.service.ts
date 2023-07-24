@@ -80,8 +80,6 @@ export class MigrationService {
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async getUpdate() {
     //= = = = = get and clean sanctioned
-    await this.iatSanctionedProvider.getSanctioned();
-    await this.iatSanctionedProvider.mapSanctioned();
 
     await this.dgtSanctionedProvider.getSanctioned();
     await this.dgtSanctionedProvider.mapSanctioned();
@@ -91,6 +89,9 @@ export class MigrationService {
 
     await this.ueSanctionedProvider.getSanctioned();
     await this.ueSanctionedProvider.mapSanctioned();
+
+    await this.iatSanctionedProvider.getSanctioned();
+    await this.iatSanctionedProvider.mapSanctioned();
 
     //= = = = = map & write sanction list
     await this.sactionProvider.mapSanction();
