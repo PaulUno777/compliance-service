@@ -16,14 +16,14 @@ export class IatSanctionedProvider {
 
   // International Trade Administration sanction source
   async getSanctioned() {
-    this.logger.log('====== Getting Sanstion From ITA Source...');
+    this.logger.log('====== Getting Sanction From ITA Source...');
     const url = this.config.get('ITA_SOURCE');
     //request
     await this.tools.saveJsonFromJson(url, 'liste_ITA');
   }
 
   async mapSanctioned() {
-    this.logger.log('====== Mapping Cleaning & Saving data From ITA Source...');
+    this.logger.log('====== Mapping Cleaning & Saving Data From ITA Source...');
     const SOURCE_DIR = this.config.get('SOURCE_DIR');
     const dataIat = await this.tools.downloadData('liste_ITA.json');
 
@@ -360,7 +360,7 @@ export class IatSanctionedProvider {
   }
 
   async migrateSanctioned() {
-    this.logger.log('migrationg ITA sanctioned Collection...');
+    this.logger.log('Migrationg ITA Sanctioned Collection...');
     //Get the data from source file
     const { results } = await this.tools.downloadData('clean_ITA.json');
 
