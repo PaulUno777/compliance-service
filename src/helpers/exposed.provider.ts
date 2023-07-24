@@ -22,7 +22,7 @@ export class ExposedProvider {
     const SOURCE_DIR = this.config.get('SOURCE_DIR');
     const fileName = 'liste_PEP';
 
-    const { length } = (await this.tools.downloadData('PEP_length.json')) | 0;
+    const { length } = await this.tools.downloadData('PEP_length.json');
     console.log(length);
 
     const stream = createReadStream(`${SOURCE_DIR}${fileName}.json`, {
