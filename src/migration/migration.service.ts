@@ -77,9 +77,7 @@ export class MigrationService {
     //request
     await this.tools.saveJsonFromJsonSpecial(url, 'liste_PEP');
     //reset
-    setInterval(async () => {
-      await this.exposedProvider.checkPepLength();
-    }, 2000);
+    await this.exposedProvider.checkPepLength();
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_3AM)
