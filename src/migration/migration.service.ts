@@ -26,7 +26,7 @@ export class MigrationService {
   ) {}
 
   //all methods that retrieve data from source every night
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron('0 0 * * 0')
   async getUpdate() {
     //= = = = = get and clean sanctioned
 
@@ -48,7 +48,7 @@ export class MigrationService {
     await this.sactionProvider.mapSanction();
   }
 
-  @Cron(CronExpression.EVERY_DAY_AT_2AM)
+  @Cron('0 12 * * 0')
   async updateAllToMongo() {
     //= = = = = delete all elements in collection
     const client = this.tools.getMongoClient();
@@ -70,7 +70,7 @@ export class MigrationService {
   }
 
   //method to retrieve & migrate PEP data every sunday at midnight
-  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  //@Cron('0 0 1 * *')
   async getPep() {
     this.logger.log('====== Getting PEP From Source...');
     const url = this.config.get('PEP_SOURCE');
@@ -80,7 +80,7 @@ export class MigrationService {
     await this.exposedProvider.checkPepLength();
   }
 
-  @Cron(CronExpression.EVERY_DAY_AT_3AM)
+  //@Cron('0 12 1 * *')
   async updatePep() {
     const client = this.tools.getMongoClient();
     await this.tools
