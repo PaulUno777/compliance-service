@@ -76,8 +76,6 @@ export class MigrationService {
     const url = this.config.get('PEP_SOURCE');
     //request
     await this.tools.saveJsonFromJsonSpecial(url, 'liste_PEP');
-    //reset
-    await this.exposedProvider.checkPepLength();
   }
 
   //@Cron('0 12 1 * *')
